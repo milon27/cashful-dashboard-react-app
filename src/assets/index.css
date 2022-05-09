@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+.my_icon svg {
+    font-size: 18px;
+}
+
+.si>button {
+    width: 100%;
+}

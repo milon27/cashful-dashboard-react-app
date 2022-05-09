@@ -34,8 +34,8 @@ const AdminHome = () => {
                 <input type="text" className='px-3 py-2 border border-gray-400 rounded-full' placeholder='Search Users' />
             </div>
             <RequestSection />
-            <UpcomingOrHistory title="Upcoming" />
-            <UpcomingOrHistory title="History" />
+            <UpcomingOrHistory upComing />
+            <UpcomingOrHistory upComing={false} />
         </Main>
     )
 }

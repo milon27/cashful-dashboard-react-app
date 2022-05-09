@@ -16,6 +16,8 @@ export class LoanRequest {
     loanAmount: string //loanAmount
     totalRepayable: string //total
 
+    loanStatus: string
+
     constructor(obj: Partial<LoanRequest>) {
         this.id = obj.id!
         this.loanDate = obj.loanDate!
@@ -27,6 +29,8 @@ export class LoanRequest {
         this.loanAmount = obj.loanAmount!
         this.interest = obj.interest!
         this.totalRepayable = obj.totalRepayable!
+
+        this.loanStatus = obj.loanStatus!
     }
 }
 

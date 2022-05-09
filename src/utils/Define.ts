@@ -7,7 +7,7 @@ const Define = {
     //db
     NOT_SET_STR: "",
     NOT_SET_INT: -1,
-    PAGE_SIZE: 10,
+    PAGE_SIZE: 3,
 }
 
 export default Define

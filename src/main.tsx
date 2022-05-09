@@ -1,11 +1,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './App'
-import './assets/index.css'
 //lib css
+import './assets/index.css'
 import '@milon27/react-modal/dist/style.css';
-import '@milon27/react-sidebar/dist/react-sidebar.css'
 import 'react-toastify/dist/ReactToastify.css';
+import '@milon27/react-sidebar/dist/react-sidebar.css'
 
 
 ReactDOM.render(

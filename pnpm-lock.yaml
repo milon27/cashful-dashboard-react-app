@@ -1,28 +1,28 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@milon27/react-modal': ^1.2.3
-  '@milon27/react-sidebar': ^4.5.0
+  '@milon27/react-modal': 1.2.4
+  '@milon27/react-sidebar': 4.5.1
   '@types/react': 17.0.33
   '@types/react-dom': 17.0.10
   '@vitejs/plugin-react': 1.0.7
-  autoprefixer: ^10.4.4
+  autoprefixer: 10.4.7
   axios: 0.26.1
-  date-fns: ^2.28.0
-  postcss: ^8.4.12
+  date-fns: 2.28.0
+  postcss: 8.4.13
   react: 17.0.2
   react-dom: 17.0.2
-  react-hook-form: ^7.30.0
-  react-icons: ^4.3.1
-  react-router-dom: ^6.3.0
-  react-toastify: ^8.2.0
-  tailwindcss: ^3.0.24
+  react-hook-form: 7.30.0
+  react-icons: 4.3.1
+  react-router-dom: 6.3.0
+  react-toastify: 8.2.0
+  tailwindcss: 3.0.24
   typescript: 4.5.4
   vite: 2.8.0
 
 dependencies:
-  '@milon27/react-modal': 1.2.3_react@17.0.2
-  '@milon27/react-sidebar': 4.5.0_react@17.0.2
+  '@milon27/react-modal': 1.2.4_react@17.0.2
+  '@milon27/react-sidebar': 4.5.1_react@17.0.2
   axios: 0.26.1
   date-fns: 2.28.0
   react: 17.0.2
@@ -341,8 +341,8 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.13
     dev: true
 
-  /@milon27/react-modal/1.2.3_react@17.0.2:
-    resolution: {integrity: sha512-G1BsiMqoDM2kkWViD/dvyM4FS946Z5ZSfelRQKPUgRhfruMeWSDLMbBs+JYzGlq2DWf8qRI5lmw8MTVjTJOYDQ==}
+  /@milon27/react-modal/1.2.4_react@17.0.2:
+    resolution: {integrity: sha512-RNGYHQSrS4LTfouYM8iLRvU32yBTU9CM2XeyE2sFT/KZmdV/VfYm4e2i10xWobC7KkV6G1hiG8/TXTPfzhj90w==}
     engines: {node: '>=10'}
     peerDependencies:
       react: '>=16'
@@ -350,8 +350,8 @@ packages:
       react: 17.0.2
     dev: false
 
-  /@milon27/react-sidebar/4.5.0_react@17.0.2:
-    resolution: {integrity: sha512-JeygQDnuY9x4iwziBBfNsrwnqQ2+HU3dO4Frzh1l23CfK4nIhDphv5qurvyKqDbYUz0/HoPv6bCmyjRBb7QAPg==}
+  /@milon27/react-sidebar/4.5.1_react@17.0.2:
+    resolution: {integrity: sha512-HgEonwH3LYjaUdeHzLdQae1eXJsb01XUMr0niiLSiaJDzHI8VvEEMp6fHoT23gpg9ma35GRSOFW7CEs30E83lQ==}
     engines: {node: '>=10'}
     peerDependencies:
       react: '>=16'

@@ -8,11 +8,11 @@ import { StateContext } from '../../../utils/context/MainContext';
 import logo from '../../../assets/img/logo.png'
 
 export interface iMain {
-    title: string,
+    title?: string,
     children: TypeReactChild
 }
 
-export default function Main({ children, title }: iMain) {
+export default function Main({ children, title = "" }: iMain) {
 
     const { setUser } = useContext(StateContext)
     const navigate = useNavigate()
@@ -29,6 +29,7 @@ export default function Main({ children, title }: iMain) {
 
     return (
         <SidebarWrapper
+            title="Cashful"
             logoUrl={logo}
             userName={"Admin"}
             userImageUrl='https://cdn1.iconfinder.com/data/icons/user-pictures/100/male3-512.png'

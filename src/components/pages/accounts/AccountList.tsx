@@ -9,7 +9,7 @@ export default function AccountList() {
     const [page, setPage] = useState(1)
     return (
         <MyCard>
-            <div className='flex justify-between items-center'>
+            <div className='flex flex-col md:flex-row gap-2 justify-between items-center'>
                 <Title text='Overview' />
                 <input type="text" className='px-5 py-1 border border-gray-400 rounded-full' placeholder='Search Users' />
             </div>

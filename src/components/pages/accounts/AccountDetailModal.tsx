@@ -11,6 +11,10 @@ interface iModal {
 }
 export default function AccountDetailModal({ show, setShow }: iModal) {
     const nav = useNavigate()
+
+
+    
+
     return (
         <Modal
             title='Account Information'

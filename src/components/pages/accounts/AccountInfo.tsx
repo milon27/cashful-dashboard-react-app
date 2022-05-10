@@ -14,22 +14,26 @@ interface iAccountInfo {
 }
 export default function AccountInfo({ info, setInfo }: iAccountInfo) {
     const [show, setShow] = useState(false)
+    if (info.firstName == undefined) {
+        return <></>
+    }
+
     return (
         <MyCard>
             <Title text='Account Information' />
             <Spacing />
-            <UserBasicInfo title1='First Name' value1={info.firstName + ""} title2='Last Name' value2={info.lastName + ""} />
-            <UserBasicInfo title1='Date of Birth' value1='12 March 1994' title2='Gender' value2='Male' />
-            <UserBasicInfo title1='Mobile Number' value1='0607069800' title2='Address' value2='58 Arndt Street, Bloemfontein' />
+            <UserBasicInfo title1='First Name' value1={info.firstName!} title2='Last Name' value2={info.lastName!} />
+            <UserBasicInfo title1='Date of Birth' value1={info.dob!} title2='Gender' value2={info.gender!} />
+            <UserBasicInfo title1='Mobile Number' value1={info.mobileNumber!} title2='Address' value2={info.address!} />
             <Spacing />
             <Button fullWidth onClick={() => { setShow(true) }}>View Account Information</Button>
             <AccountDetailModal show={show} setShow={setShow} />
             <Spacing />
             <Title text='User documents' />
             <Spacing />
-            <DocBox />
-            <DocBox />
-            <DocBox />
+            <DocBox id={info.id} url={info.doc.bankStatement.url} status={info.doc.bankStatement.status} infoKey="bankStatement" />
+            <DocBox id={info.id} url={info.doc.idCard.url} status={info.doc.idCard.status} infoKey="idCard" />
+            <DocBox id={info.id} url={info.doc.proofOfAddress.url} status={info.doc.proofOfAddress.status} infoKey="proofOfAddress" />
         </MyCard>
     )
 }

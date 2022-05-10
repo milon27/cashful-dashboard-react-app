@@ -94,7 +94,6 @@ export default function Accounts() {
             setLastID(undefined)
         }
     }
-    console.log("---", lastID);
 
 
     return (
@@ -109,6 +108,9 @@ export default function Accounts() {
                     </div>}
                 </div>
                 <div className='col-span-1'>
+                    {/* {
+                        JSON.stringify(info.id)
+                    } */}
                     <AccountInfo info={info} setInfo={setInfo} />
                 </div>
             </div>

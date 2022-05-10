@@ -1,12 +1,13 @@
-import { documentId, getDoc, getDocs, limit, orderBy, query, startAfter, where } from 'firebase/firestore'
+import { documentId, getDoc, getDocs, limit, orderBy, query, QuerySnapshot, startAfter, where } from 'firebase/firestore'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import Define from '../../../utils/Define'
 import { Collections } from '../../../utils/firebase/Collections'
 import { createCollection, createDoc } from '../../../utils/firebase/config'
 import Helper from '../../../utils/Helper'
-import { iUser, User, UserDoc } from '../../../utils/interface/Models'
+import { User, UserDoc } from '../../../utils/interface/Models'
 import Main from '../../layout/dashboard/Main'
+import Button from '../../layout/form/Button'
 import AccountInfo from './AccountInfo'
 import AccountList from './AccountList'
 
@@ -27,8 +28,8 @@ export default function Accounts() {
     const [info, setInfo] = useState<iUserInfo>({} as iUserInfo)
 
     const [pendingList, setPendingList] = useState<iUserInfo[]>([])
-    const [approvedList, setApprovedList] = useState<unknown[]>([])
-    const [last, setLast] = useState("")
+    const [approvedList, setApprovedList] = useState<iUserInfo[]>([])
+    const [lastID, setLastID] = useState<string | undefined>(undefined)
 
     useEffect(() => {
         const load = async () => {
@@ -46,66 +47,17 @@ export default function Accounts() {
             )
 
             const [d1, d2, d3, d4] = await Promise.all([getDocs(q1), getDocs(q2), getDocs(q3), getDocs(q4)])
-            const pendingDuplist = [] as iUserInfo[]
-
-            let approvedUserId = new Set()
-
-            if (!d1.empty) {
-                d1.docs.forEach(item => {
-                    pendingDuplist.push({
-                        id: item.id,
-                        doc: item.data()
-                    })
-                })
+            setPendingList(await getPendingUserList(d1, d2, d3));
+            const [mylast, approveList] = await getApprovedList(d4);
+            if (approveList) {
+                setApprovedList(approveList as iUserInfo[])
+            } else {
+                toast("No Next Page Available")
             }
-            if (!d2.empty) {
-                d2.docs.forEach(item => {
-                    pendingDuplist.push({
-                        id: item.id,
-                        doc: item.data()
-                    })
-                })
-            }
-            if (!d3.empty) {
-                d3.docs.forEach(item => {
-                    pendingDuplist.push({
-                        id: item.id,
-                        doc: item.data()
-                    })
-                })
-            }
-            // filter duplicate pending doc list without name
-            const pendingUserlist: iUserInfo[] = Helper.uniqueArray(pendingDuplist as any[], "id")
-
-            // load first name and last name
-            const pendingUserlistWithFL = await Promise.all(pendingUserlist.map(async itm => {
-                const userData = await getDoc<User>(createDoc(Collections.USER, itm.id))
-                return {
-                    ...itm,
-                    firstName: userData.data()?.firstName,
-                    lastName: userData.data()?.lastName,
-                    address: userData.data()?.address,
-                    dob: userData.data()?.dob,
-                    mobileNumber: userData.data()?.mobileNumber,
-                    gender: userData.data()?.gender,
-                } as iUserInfo
-            }))
-
-            //console.log("pendingUserlistWithFL=", JSON.stringify(await Promise.all(pendingUserlistWithFL)));
-
-            setPendingList(pendingUserlistWithFL)
-            //===========================================================================================
-            // done
-            //===========================================================================================
-            if (!d4.empty) {
-                d4.docs.forEach(item => {
-                    approvedUserId.add(item.id)
-                })
-                const approved = [...approvedUserId]
-                //setApprovedList(approved)
-                if (approved.length === Define.PAGE_SIZE) {
-                    setLast(approved.pop() as string || "")
-                }
+            if (mylast !== undefined) {
+                setLastID(mylast as string)
+            } else {
+                setLastID(undefined)
             }
         }
         load()
@@ -113,7 +65,7 @@ export default function Accounts() {
 
 
     const loadNext = async () => {
-        if (last === "") {
+        if (lastID == undefined) {
             toast("No Next Page Available")
             return;
         }
@@ -124,28 +76,37 @@ export default function Accounts() {
             where("idCard.status", "==", "approved"),
             where("proofOfAddress.status", "==", "approved"),
             orderBy(documentId()),
-            startAfter(last),
+            startAfter(lastID),
             limit(Define.PAGE_SIZE)
         )
-        const userData = await getDocs(q)
-        if (!userData.empty) {
-            if (userData.docs.length === Define.PAGE_SIZE) {
-                setLast(userData.docs.map(item => item.id).pop() as string || "")
-            }
-            console.log("next page: ", userData.docs.map(item => item.id));
+        const approveUserData: QuerySnapshot<UserDoc> = await getDocs<UserDoc>(q)
+
+        const [mylast, approveList] = await getApprovedList(approveUserData)
+        setLastID(mylast as string)
+        if (approveList) {
+            setApprovedList(approveList as iUserInfo[])
         } else {
-            console.log("no next");
+            toast("No Next Page Available")
+        }
+        if (mylast !== undefined) {
+            setLastID(mylast as string)
+        } else {
+            setLastID(undefined)
         }
     }
+    console.log("---", lastID);
+
 
     return (
         <Main title='Accounts'>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className='col-span-1'>
-                    <AccountList pendingList={pendingList} reviewedList={[]} setInfo={setInfo} />
-                    <button onClick={() => {
-                        loadNext()
-                    }}>view more</button>
+                    <AccountList pendingList={pendingList} reviewedList={approvedList} setInfo={setInfo} />
+                    {lastID !== undefined && <div className='my-4 flex justify-center'>
+                        <Button onClick={() => {
+                            loadNext()
+                        }}>view more</Button>
+                    </div>}
                 </div>
                 <div className='col-span-1'>
                     <AccountInfo info={info} setInfo={setInfo} />
@@ -153,4 +114,82 @@ export default function Accounts() {
             </div>
         </Main>
     )
+}
+
+
+
+const getPendingUserList = async (
+    d1: QuerySnapshot<UserDoc>,
+    d2: QuerySnapshot<UserDoc>,
+    d3: QuerySnapshot<UserDoc>
+): Promise<iUserInfo[]> => {
+    const pendingDuplist = [] as iUserInfo[]
+
+    if (!d1.empty) {
+        d1.docs.forEach(item => {
+            pendingDuplist.push({
+                id: item.id,
+                doc: item.data()
+            })
+        })
+    }
+    if (!d2.empty) {
+        d2.docs.forEach(item => {
+            pendingDuplist.push({
+                id: item.id,
+                doc: item.data()
+            })
+        })
+    }
+    if (!d3.empty) {
+        d3.docs.forEach(item => {
+            pendingDuplist.push({
+                id: item.id,
+                doc: item.data()
+            })
+        })
+    }
+    return await getUserData(pendingDuplist);
+}
+
+
+const getApprovedList = async (d4: QuerySnapshot<UserDoc>): Promise<(string | iUserInfo[] | undefined)[]> => {
+    const appDuplist = [] as iUserInfo[]
+    if (!d4.empty) {
+        d4.docs.forEach(item => {
+            appDuplist.push({
+                id: item.id,
+                doc: item.data()
+            })
+        })
+        let lastID = undefined;
+        if (appDuplist.length === Define.PAGE_SIZE) {
+            lastID = appDuplist[appDuplist.length - 1]?.id;
+        }
+        const userDataList = await getUserData(appDuplist, false)
+
+        return [lastID, userDataList]
+    } else {
+        return [undefined, undefined]
+    }
+}
+
+const getUserData = async (pendingDuplist: iUserInfo[] = [], needUniq = true) => {
+    // filter duplicate pending doc list without name
+    const pendingUserlist: iUserInfo[] = needUniq ? Helper.uniqueArray(pendingDuplist as any[], "id") : pendingDuplist
+
+    // load first name and last name
+    const pendingUserlistWithFL = await Promise.all(pendingUserlist.map(async itm => {
+        const userData = await getDoc<User>(createDoc(Collections.USER, itm.id))
+        return {
+            ...itm,
+            firstName: userData.data()?.firstName,
+            lastName: userData.data()?.lastName,
+            address: userData.data()?.address,
+            dob: userData.data()?.dob,
+            mobileNumber: userData.data()?.mobileNumber,
+            gender: userData.data()?.gender,
+        } as iUserInfo
+    }))
+    return pendingUserlistWithFL
 }

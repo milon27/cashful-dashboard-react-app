@@ -53,6 +53,9 @@ const Helper = {
         } else {
             return []
         }
+    },
+    uniqueArray: (arr: any[],key:string) => {
+        return  [...new Map(arr.map(item => [item[key], item])).values()]
     }
 }
 

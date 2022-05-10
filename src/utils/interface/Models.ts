@@ -39,6 +39,26 @@ export interface User {
     id: string
     firstName: string
     lastName: string
+    dob: string,
+    address: string,
+    mobileNumber: string,
+    gender?: string,
+}
+
+export interface UserDoc {
+    id: string //user id
+    bankStatement: {
+        status: string
+        url: string
+    }
+    idCard: {
+        status: string
+        url: string
+    }
+    proofOfAddress: {
+        status: string
+        url: string
+    }
 }
 
 // level

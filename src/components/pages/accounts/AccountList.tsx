@@ -1,12 +1,18 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import MyCard from '../../layout/common/MyCard'
-import MyPagination from '../../layout/common/Pagination'
 import Spacing from '../../layout/form/Spacing'
 import Table from '../../layout/form/Table'
 import Title from '../../layout/form/Title'
+import { iUserInfo } from './Accounts'
 
-export default function AccountList() {
-    const [page, setPage] = useState(1)
+interface iAccountList {
+    pendingList: iUserInfo[]
+    reviewedList: iUserInfo[]
+    setInfo: React.Dispatch<React.SetStateAction<iUserInfo>>
+}
+
+export default function AccountList({ pendingList = [], setInfo, reviewedList = [] }: iAccountList) {
+
     return (
         <MyCard>
             <div className='flex flex-col md:flex-row gap-2 justify-between items-center'>
@@ -21,13 +27,18 @@ export default function AccountList() {
                 <Spacing />
                 <Table
                     noShadow={true}
-                    header="First Name,Last Name,Account Status"
+                    header="First Name,Last Name,Account Status,View"
                     items={[
-                        {
-                            fname: "Moses",
-                            lname: "Kenwood",
-                            status: "Pending"
-                        }
+                        ...pendingList.map(item => {
+                            return {
+                                fname: item.firstName + "",
+                                lname: item.lastName,
+                                status: "pending",
+                                btn: <><button onClick={() => {
+                                    setInfo(item)
+                                }}>View</button></>
+                            }
+                        })
                     ]}
                     hideOption={true}
                 />
@@ -39,18 +50,22 @@ export default function AccountList() {
                 <Spacing />
                 <Table
                     noShadow={true}
-                    header="First Name,Last Name,Account Status"
+                    header="First Name,Last Name,Account Status,View"
                     items={[
-                        {
-                            fname: "Moses",
-                            lname: "Kenwood",
-                            status: "Verified"
-                        }
+                        ...reviewedList.map(item => {
+                            return {
+                                fname: item.firstName + "",
+                                lname: item.lastName,
+                                status: "reviewd",
+                                btn: <><button onClick={() => {
+                                    setInfo(item)
+                                }}>View</button></>
+                            }
+                        })
                     ]}
                     hideOption={true}
                 />
                 <Spacing />
-                <MyPagination page={page} setPage={setPage} current_length={2} />
             </div>
         </MyCard>
     )

@@ -4,16 +4,21 @@ import Button from '../../layout/form/Button'
 import Spacing from '../../layout/form/Spacing'
 import Title from '../../layout/form/Title'
 import AccountDetailModal from './AccountDetailModal'
+import { iUserInfo } from './Accounts'
 import DocBox from './DocBox'
 import UserBasicInfo from './UserBasicInfo'
 
-export default function AccountInfo() {
+interface iAccountInfo {
+    info: iUserInfo
+    setInfo: React.Dispatch<React.SetStateAction<iUserInfo>>
+}
+export default function AccountInfo({ info, setInfo }: iAccountInfo) {
     const [show, setShow] = useState(false)
     return (
         <MyCard>
             <Title text='Account Information' />
             <Spacing />
-            <UserBasicInfo title1='First Name' value1='Anna' title2='Last Name' value2='Moore' />
+            <UserBasicInfo title1='First Name' value1={info.firstName + ""} title2='Last Name' value2={info.lastName + ""} />
             <UserBasicInfo title1='Date of Birth' value1='12 March 1994' title2='Gender' value2='Male' />
             <UserBasicInfo title1='Mobile Number' value1='0607069800' title2='Address' value2='58 Arndt Street, Bloemfontein' />
             <Spacing />

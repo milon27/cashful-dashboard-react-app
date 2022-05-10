@@ -6,15 +6,16 @@ interface iMySelect {
     hideLabel?: boolean,
     labelAsFirst?: boolean,
     name: string,
+    defaultValue?: string,
     full_width?: boolean,
     options: { title: string, value: string }[],
-    onChange: (event: TypeOnChange) => void
+    onChange: (value: string) => void
 }
 export default function MySelect(
-    { label, hideLabel = false, labelAsFirst = false, name, full_width = true, onChange, options }: iMySelect) {
+    { label, hideLabel = false, labelAsFirst = false, defaultValue = undefined, name, full_width = true, onChange, options }: iMySelect) {
     return (
         //px-3
-        <div className={full_width === true ? "w-full mb-6 md:mb-4" : "w-full md:w-1/3 mb-6 md:mb-4"}>
+        <div className={full_width === true ? "w-full " : "w-full md:w-1/3 "}>
             {
                 hideLabel ? <></> : <>
                     <label className="block uppercase tracking-wide text-gray-700 text-xs  mb-2" htmlFor={name}>
@@ -26,10 +27,13 @@ export default function MySelect(
             <div className="relative">
                 <select className="block appearance-none w-full  border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none bg-white focus:border-primary" id={name}
                     name={name}
-                    defaultValue={"none"}
-                    onChange={onChange}
+                    defaultValue={defaultValue || "none"}
+                    onChange={(e) => {
+                        if (e.target.value !== "none")
+                            onChange(e.target.value)
+                    }}
                 >
-                    <option value={"none"} disabled={true}>{labelAsFirst ? label : "Choose Option"}</option>
+                    <option value={"none"} disabled={false}>{labelAsFirst ? label : "Choose Option"}</option>
                     {options.map((item, i) => {
                         return <option key={i} value={item.value}>{item.title}</option>
                     })}

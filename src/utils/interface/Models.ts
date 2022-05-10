@@ -49,3 +49,13 @@ export interface Level {
     min: number
     max: number
 }
+
+// status
+
+export enum STATUS {
+    pending = "pending",
+    approved = "approved",
+    rejected = "rejected",
+    paid = "paid",
+    defaulted = "defaulted",
+}

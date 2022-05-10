@@ -1,16 +1,16 @@
-import React, { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import Define from '../../../utils/Define'
-import { LoanRequest, User } from '../../../utils/interface/Models'
+import { LoanRequest, STATUS, User } from '../../../utils/interface/Models'
 import Button from '../../layout/form/Button'
 import Spacing from '../../layout/form/Spacing'
 import Table from '../../layout/form/Table'
 import Title from '../../layout/form/Title'
-import { createCollection, createDoc } from '../../../utils/firebase/config'
+import { createDoc } from '../../../utils/firebase/config'
 import { Collections } from '../../../utils/firebase/Collections'
-import { getDocs, getDoc, query, where, orderBy, limit, startAfter, endBefore, limitToLast, QuerySnapshot } from 'firebase/firestore'
+import { getDoc, where, QuerySnapshot, updateDoc } from 'firebase/firestore'
 import { StateContext } from '../../../utils/context/MainContext'
 import FbPaginate from '../../layout/common/FbPaginate'
-import { initLoadData } from './HomeUtils'
+import { initLoadData, onUpdateStatus, paginateNext, paginatePrev, URHpopulateData } from './HomeUtils'
 
 export default function RequestSection() {
     const [requests, setRequests] = useState<LoanRequest[]>([])
@@ -20,58 +20,20 @@ export default function RequestSection() {
     // init
     useEffect(() => {
         if (levels.length > 0)
-            initLoadData(setPage, populateDate, where("loanStatus", "==", "pending"))
+            initLoadData(setPage, populateData, where("loanStatus", "==", STATUS.pending))
     }, [levels.length])
 
     //next
     const next = async () => {
-        const lrColRef = createCollection<LoanRequest>(Collections.LOAN_REQUEST)
-        const lrQuery = query<LoanRequest>(lrColRef, where("loanStatus", "==", "pending"), orderBy("loanDate", "desc"), startAfter(requests[requests.length - 1].loanDate), limit(Define.PAGE_SIZE))
-        const data = await getDocs<LoanRequest>(lrQuery)
-        setPage(page => page + 1)
-
-        populateDate(data)
-
+        paginateNext(setPage, populateData, requests, where("loanStatus", "==", STATUS.pending))
     }
     //prev
     const prev = async () => {
-        const lrColRef = createCollection<LoanRequest>(Collections.LOAN_REQUEST)
-        const lrQuery = query<LoanRequest>(lrColRef, where("loanStatus", "==", "pending"), orderBy("loanDate", "desc"), endBefore(requests[0].loanDate), limitToLast(Define.PAGE_SIZE))
-        const data = await getDocs<LoanRequest>(lrQuery)
-        setPage(page => page - 1)
-        populateDate(data)
+        paginatePrev(setPage, populateData, requests, where("loanStatus", "==", STATUS.pending))
     }
 
-    const populateDate = async (data: QuerySnapshot<LoanRequest>) => {
-        setRequests([])
-        data.docs.forEach(async (doc) => {
-            //get other info
-            const userDocRef = createDoc<User>(Collections.USER, doc.data().userId)
-            const user = await getDoc(userDocRef)
-
-            const levelArray = levels.filter(item => {
-                const lAmount = parseInt(doc.data().loanAmount)
-                if (item.min <= lAmount && lAmount <= item.max) {
-                    return true;
-                } else {
-                    return false;
-                }
-            })
-
-            const levelData = levelArray[0]
-
-            const obj = {
-                ...doc.data(),
-                id: doc.id,
-                firstName: user.data()?.firstName,
-                lastName: user.data()?.lastName,
-                level: levelData?.name + "",
-                interest: levelData?.interest * 100 + "%"
-            } as LoanRequest
-            setRequests(old => {
-                return [...old, obj]
-            })
-        })
+    const populateData = async (data: QuerySnapshot<LoanRequest>) => {
+        URHpopulateData(data, levels, setRequests);
     }
 
     return (
@@ -92,8 +54,8 @@ export default function RequestSection() {
                             interest: item.interest,
                             total: Define.CURRENCY + item.totalRepayable,
                             option: <div className='flex gap-2'>
-                                <Button onClick={() => { }}>Approve</Button>
-                                <Button seconday onClick={() => { }}>Reject</Button>
+                                <Button onClick={() => { onUpdateStatus(item, STATUS.approved) }}>Approve</Button>
+                                <Button seconday onClick={() => { onUpdateStatus(item, STATUS.rejected) }}>Reject</Button>
                             </div>
                         }
                     })

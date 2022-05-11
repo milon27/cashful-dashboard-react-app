@@ -3,4 +3,6 @@ export enum Collections {
     USER = "users_n",
     USER_DOC = "user_documents",
     LEVEL = "levels",
+    PAYMENT_INFO = "payment_infos",
+    BACK_INFO = "background_informations",
 }

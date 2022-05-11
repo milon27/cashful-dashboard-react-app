@@ -14,6 +14,7 @@ interface iAccountInfo {
 }
 export default function AccountInfo({ info, setInfo }: iAccountInfo) {
     const [show, setShow] = useState(false)
+    //const [_id, setId] = useState("")
     if (info.firstName == undefined) {
         return <></>
     }
@@ -22,12 +23,15 @@ export default function AccountInfo({ info, setInfo }: iAccountInfo) {
         <MyCard>
             <Title text='Account Information' />
             <Spacing />
-            <UserBasicInfo title1='First Name' value1={info.firstName!} title2='Last Name' value2={info.lastName!} />
-            <UserBasicInfo title1='Date of Birth' value1={info.dob!} title2='Gender' value2={info.gender!} />
-            <UserBasicInfo title1='Mobile Number' value1={info.mobileNumber!} title2='Address' value2={info.address!} />
+            <UserBasicInfo title1='First Name' value1={info.firstName || "-"} title2='Last Name' value2={info.lastName || "-"} />
+            <UserBasicInfo title1='Date of Birth' value1={info.dob || "-"} title2='Gender' value2={info.gender || "-"} />
+            <UserBasicInfo title1='Mobile Number' value1={info.mobileNumber || "-"} title2='Address' value2={info.address || "-"} />
             <Spacing />
-            <Button fullWidth onClick={() => { setShow(true) }}>View Account Information</Button>
-            <AccountDetailModal show={show} setShow={setShow} />
+            <Button fullWidth onClick={() => {
+                setShow(true)
+                //setId(info.id)
+            }}>View Account Information</Button>
+            <AccountDetailModal info={info} show={show} setShow={setShow} />
             <Spacing />
             <Title text='User documents' />
             <Spacing />

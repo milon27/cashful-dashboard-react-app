@@ -79,3 +79,34 @@ export enum STATUS {
     paid = "paid",
     defaulted = "defaulted",
 }
+
+// account :-> bank info & mtn info & background info
+export interface iPaymentInfos {
+    bankDetail?: {
+        accountNumber: string
+        accountType: string
+        bankCode: string
+        bankName: string
+        hodlerName: string
+    }
+    mtnDetail?: {
+        accountNumber: string
+        fullName: string
+    }
+}
+
+export interface iBackgroundInfo {
+    creditScore?: string
+    creditScoreValue?: string
+    isSmallBusinessOwner: boolean
+    businessOffering?: string
+    lengthOfOperation?: string//Length of Operations
+    sourceOfFinancing?: string//Initial Business Financing
+    investmentToDate?: string //Business Investment To-Date
+    monthlyIncome?: string //Business Income Per Month
+    monthlyExpense?: string //Business Expenses Per Month
+    highestLevelOfEducation?: string//Highest Level of Education
+    savingMonthly?: string//Monthly Savings
+    isPartOfStockvel?: boolean//Stokvel Participation
+    stockvelContribution?: string//Stokvel Contribution
+}

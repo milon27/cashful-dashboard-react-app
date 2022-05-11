@@ -9,16 +9,25 @@ import Button from "../../layout/form/Button";
 import { useForm } from 'react-hook-form'
 import { iUser } from "../../../utils/interface/Models";
 import Define from "../../../utils/Define";
+import { toast } from "react-toastify";
 
 const Login = () => {
     const { user: cUser, setUser } = useContext(StateContext)
     const { register, handleSubmit } = useForm<iUser>({
         defaultValues: {
-            email: "jokermr143@gmail.com",
+            email: "demo@gmail.com",
             password: "1234567"
         }
     })
     const login = (data: iUser) => {
+        if (data.email !== "demo@gmail.com") {
+            toast("Wrong password")
+            return;
+        }
+        if (data.password !== "1234567") {
+            toast("Wrong password")
+            return;
+        }
         localStorage.setItem(Define.AUTH_KEY, JSON.stringify(data))
         setUser(data)
     }
@@ -31,9 +40,9 @@ const Login = () => {
 
     return (
         <>
-            <div className="container m-auto w-1/4 h-screen grid grid-cols-1 place-content-center">
+            <div className="container m-auto w-11/12 md:w-1/4 h-screen grid grid-cols-1 place-content-center">
                 <div className="w-full flex justify-center">
-                    <img src={logo} className="w-20" alt="" />
+                    <img src={logo} className="w-12 h-12" alt="" />
                 </div>
 
                 <form>

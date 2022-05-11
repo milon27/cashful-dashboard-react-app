@@ -30,7 +30,7 @@ export default function AccountDetailModal({ info, show, setShow }: iModal) {
             const backgroundDoc = getDoc<iBackgroundInfo>(createDoc(Collections.BACK_INFO, id))
             const bankMtnDoc = getDoc<iPaymentInfos>(createDoc(Collections.PAYMENT_INFO, id))
             const [backData, payData] = await Promise.all([backgroundDoc, bankMtnDoc])
-            console.log(backData, payData);
+            //console.log(backData, payData);
             if (payData.exists())
                 setPay(payData.data()!)
             if (backData.exists()) {
@@ -72,7 +72,7 @@ export default function AccountDetailModal({ info, show, setShow }: iModal) {
                     <div className='flex justify-between items-center gap-2'>
                         <Title isSubtitle text={`${pay.bankDetail ? "Bank" : "MTN"} Account Details`} />
                         <Button title='Edit' onClick={() => {
-                            nav(`${pay.bankDetail ? URL.BANK : URL.MTN}/${info.id}`)
+                            nav(`${URL.PAY_INFO}/${info.id}`)
                         }} />
                     </div>
                     {

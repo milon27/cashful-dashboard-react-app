@@ -4,7 +4,7 @@ import { UseFormRegisterReturn } from 'react-hook-form'
 interface iInput {
     title: string,
     value?: string,
-    name: string,
+    name?: string,
     onChange?: TypeOnChangeHandler,
     disable?: boolean,
     type?: 'text' | 'textarea' | "email" | "password" | "date" | "number",
@@ -15,7 +15,7 @@ interface iInput {
     register?: UseFormRegisterReturn,
 }
 
-const Input: FC<iInput> = ({ title, value, name, onChange, row = 4, register, disable = false, type = "text", show_title = true, min = "", max = "", ...other }) => {
+const Input: FC<iInput> = ({ title = "Enter A Value", value, name = undefined, onChange, row = 4, register, disable = false, type = "text", show_title = true, min = "", max = "", ...other }) => {
     return (
         <>
             <div className='mb-3'>

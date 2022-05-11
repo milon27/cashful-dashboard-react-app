@@ -13,7 +13,7 @@ import Title from '../../layout/form/Title'
 import { BsFillBackspaceFill } from 'react-icons/bs'
 import AccountInfo from './AccountInfo'
 import AccountList from './AccountList'
-
+import { searchUser } from '../home/HomeUtils'
 
 export interface iUserInfo {
     id: string,
@@ -102,7 +102,7 @@ export default function Accounts() {
         }
     }
 
-    const doSearch = async () => {
+    const doSearch1 = async () => {
         if (search.length == 0) {
             return;
         }
@@ -125,6 +125,38 @@ export default function Accounts() {
                 }
             })
             setApprovedList(list)
+        } else {
+            toast("No Data Available")
+        }
+    }
+
+
+
+    // show that on approve list
+    const doSearch = async () => {
+        if (search.length == 0) {
+            return;
+        }
+        // get user by user firstname
+        const userColRef = createCollection<User>(Collections.USER)
+        const usersData = await getDocs(query<User>(userColRef, where("firstName", "==", search)))
+        if (!usersData.empty) {
+            setSearching(true)
+            // get doc for that user
+            const userData = usersData.docs[0]
+            const data = await getDoc<UserDoc>(createDoc<UserDoc>(Collections.USER_DOC, userData.id))
+            const docData = data.data()
+            const info = {
+                id: userData.id,
+                firstName: userData.data().firstName,
+                lastName: userData.data().lastName,
+                dob: userData.data().dob,
+                address: userData.data().address,
+                gender: userData.data().gender,
+                mobileNumber: userData.data().mobileNumber,
+                doc: docData,
+            } as iUserInfo
+            setApprovedList([info])
         } else {
             toast("No Data Available")
         }
@@ -156,7 +188,7 @@ export default function Accounts() {
                     <Spacing />
                     <Spacing />
                     <Spacing />
-                    <AccountList pendingList={pendingList} reviewedList={approvedList} setInfo={setInfo} />
+                    <AccountList searching={searching} pendingList={pendingList} reviewedList={approvedList} setInfo={setInfo} />
 
 
                     {searching == false && lastID !== undefined && <div className='my-4 flex justify-center'>

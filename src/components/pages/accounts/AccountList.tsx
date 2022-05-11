@@ -6,12 +6,13 @@ import Title from '../../layout/form/Title'
 import { iUserInfo } from './Accounts'
 
 interface iAccountList {
+    searching: boolean
     pendingList: iUserInfo[]
     reviewedList: iUserInfo[]
     setInfo: React.Dispatch<React.SetStateAction<iUserInfo>>
 }
 
-export default function AccountList({ pendingList = [], setInfo, reviewedList = [] }: iAccountList) {
+export default function AccountList({ searching = false, pendingList = [], setInfo, reviewedList = [] }: iAccountList) {
 
     return (
         <MyCard>
@@ -39,7 +40,7 @@ export default function AccountList({ pendingList = [], setInfo, reviewedList = 
             <Spacing />
             <Spacing />
             <div>
-                <Title text='Reviewed' isSubtitle />
+                <Title text={searching ? 'Search Results' : 'Reviewed'} isSubtitle />
                 <Spacing />
                 <Table
                     noShadow={true}

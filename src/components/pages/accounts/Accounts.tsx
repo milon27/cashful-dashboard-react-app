@@ -5,9 +5,12 @@ import Define from '../../../utils/Define'
 import { Collections } from '../../../utils/firebase/Collections'
 import { createCollection, createDoc } from '../../../utils/firebase/config'
 import Helper from '../../../utils/Helper'
-import { User, UserDoc } from '../../../utils/interface/Models'
+import { STATUS, User, UserDoc } from '../../../utils/interface/Models'
 import Main from '../../layout/dashboard/Main'
 import Button from '../../layout/form/Button'
+import Spacing from '../../layout/form/Spacing'
+import Title from '../../layout/form/Title'
+import { BsFillBackspaceFill } from 'react-icons/bs'
 import AccountInfo from './AccountInfo'
 import AccountList from './AccountList'
 
@@ -30,6 +33,10 @@ export default function Accounts() {
     const [pendingList, setPendingList] = useState<iUserInfo[]>([])
     const [approvedList, setApprovedList] = useState<iUserInfo[]>([])
     const [lastID, setLastID] = useState<string | undefined>(undefined)
+
+    const [realod, setrealod] = useState(false)
+    const [searching, setSearching] = useState(false)
+    const [search, setSearch] = useState("")
 
     useEffect(() => {
         const load = async () => {
@@ -61,7 +68,7 @@ export default function Accounts() {
             }
         }
         load()
-    }, [])
+    }, [realod])
 
 
     const loadNext = async () => {
@@ -95,13 +102,64 @@ export default function Accounts() {
         }
     }
 
+    const doSearch = async () => {
+        if (search.length == 0) {
+            return;
+        }
+        setSearching(true)
+        const docColRef = createCollection<UserDoc>(Collections.USER_DOC)
+        const sq = query(docColRef,
+            where("bankStatement.status", "==", "approved"),
+            where("idCard.status", "==", "approved"),
+            where("proofOfAddress.status", "==", "approved"),
+            orderBy(documentId())
+        )
+        const sd = await getDocs(sq)
+        const [mylast, approveList] = await getApprovedList(sd);
+        if (approveList) {
+            const list = (approveList as iUserInfo[]).filter(item => {
+                if (item.firstName?.toString().toLowerCase().includes(search.trim().toLowerCase())) {
+                    return true;
+                } else {
+                    return false;
+                }
+            })
+            setApprovedList(list)
+        } else {
+            toast("No Data Available")
+        }
+    }
+
 
     return (
         <Main title='Accounts'>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className='col-span-1'>
+                    <div className='flex flex-col md:flex-row gap-2 justify-between items-center'>
+                        <Title text='Overview' />
+                        <div className='flex justify-end items-center gap-2'>
+                            <input
+                                onKeyUp={(e) => {
+                                    e.preventDefault()
+                                    if (e.key === "Enter") {
+                                        doSearch()
+                                    }
+                                }}
+                                value={search} onChange={(e) => { setSearch(e.target.value) }} type="text" className='px-5 py-1 border border-gray-400 rounded-full' placeholder='Search Users' />
+                            {searching && <BsFillBackspaceFill className='text-3xl cursor-pointer' onClick={() => {
+                                setSearch("")
+                                setSearching(false)
+                                setrealod(old => !old)
+                            }} />}
+                        </div>
+                    </div>
+                    <Spacing />
+                    <Spacing />
+                    <Spacing />
                     <AccountList pendingList={pendingList} reviewedList={approvedList} setInfo={setInfo} />
-                    {lastID !== undefined && <div className='my-4 flex justify-center'>
+
+
+                    {searching == false && lastID !== undefined && <div className='my-4 flex justify-center'>
                         <Button onClick={() => {
                             loadNext()
                         }}>view more</Button>

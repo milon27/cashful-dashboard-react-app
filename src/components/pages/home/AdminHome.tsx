@@ -36,6 +36,9 @@ const AdminHome = () => {
     }, [])
 
     const doSearch = async () => {
+        if (search.length == 0) {
+            return;
+        }
         setSearching(true)
         // get the user first
         const userIdArr = await searchUser(search)

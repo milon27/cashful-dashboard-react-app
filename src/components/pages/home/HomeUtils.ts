@@ -124,7 +124,7 @@ export const URHpopulateData = async (
 
 export const onUpdateStatus = async (item: LoanRequest, status: STATUS) => {
     //send to upcoming..
-    const yes = confirm("are you sure to make it " + status + "?")
+    const yes = confirm("Are you sure you want to change the status to " + status + "?")
     if (yes === true) {
         const lrDocRef = createDoc<LoanRequest>(Collections.LOAN_REQUEST, item.id)
         await updateDoc(lrDocRef, { "loanStatus": status.toString() })

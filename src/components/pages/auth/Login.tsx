@@ -15,17 +15,13 @@ const Login = () => {
     const { user: cUser, setUser } = useContext(StateContext)
     const { register, handleSubmit } = useForm<iUser>({
         defaultValues: {
-            email: "demo@gmail.com",
-            password: "1234567"
+            email: "",
+            password: ""
         }
     })
     const login = (data: iUser) => {
-        if (data.email !== "demo@gmail.com") {
-            toast("Wrong password")
-            return;
-        }
-        if (data.password !== "1234567") {
-            toast("Wrong password")
+        if (data.email !== "support@cashful.me" || data.password !== "ADMIN*01") {
+            toast("Wrong Credentials")
             return;
         }
         localStorage.setItem(Define.AUTH_KEY, JSON.stringify(data))

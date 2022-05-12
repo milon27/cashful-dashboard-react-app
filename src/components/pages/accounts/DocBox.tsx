@@ -15,7 +15,7 @@ export default function DocBox({ id, status, url, infoKey }: iDocBox) {
 
     const onUpdateStatus = async (_status: "pending" | "approved") => {
         //send to upcoming..
-        const yes = confirm("are you sure to make it " + _status + "?")
+        const yes = confirm("Are you sure you want to change the status to " + _status + "?")
         if (yes === true) {
             console.log(Collections.USER_DOC, id);
 

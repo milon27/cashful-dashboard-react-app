@@ -13,7 +13,6 @@ import Title from '../../layout/form/Title'
 import { BsFillBackspaceFill } from 'react-icons/bs'
 import AccountInfo from './AccountInfo'
 import AccountList from './AccountList'
-import { searchUser } from '../home/HomeUtils'
 
 export interface iUserInfo {
     id: string,
@@ -194,7 +193,7 @@ export default function Accounts() {
                     {searching == false && lastID !== undefined && <div className='my-4 flex justify-center'>
                         <Button onClick={() => {
                             loadNext()
-                        }}>view more</Button>
+                        }}>View More</Button>
                     </div>}
                 </div>
                 <div className='col-span-1'>

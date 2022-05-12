@@ -27,7 +27,7 @@ export default function AccountList({ searching = false, pendingList = [], setIn
                             return {
                                 fname: item.firstName + "",
                                 lname: item.lastName,
-                                status: "pending",
+                                status: "Pending",
                                 btn: <><button onClick={() => {
                                     setInfo(item)
                                 }}>View</button></>
@@ -50,7 +50,7 @@ export default function AccountList({ searching = false, pendingList = [], setIn
                             return {
                                 fname: item.firstName + "",
                                 lname: item.lastName,
-                                status: "reviewd",
+                                status: "Reviewed",
                                 btn: <><button onClick={() => {
                                     setInfo(item)
                                 }}>View</button></>

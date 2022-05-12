@@ -7,6 +7,11 @@
 1. edit bank and mtn information.
 1. edit background information.
 
+## how to deploy
+1. added homepage in package.json file ["homepage": "https://cashful-admin.netlify.app"]
+1. drag and drop _redirects file into dist folder
+1. drag and drop the dist folder in netlify sites
+
 ## screenshots
 > dashboard
 ![img1](screen1.png)

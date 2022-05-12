@@ -1,11 +1,14 @@
 {
   "name": "cashful",
+  "homepage": "https://M-Mokoteli.github.io/cashful-admin",
   "private": true,
   "version": "0.0.0",
   "scripts": {
     "dev": "vite --host 0.0.0.0 --port 3000",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@milon27/react-modal": "1.2.4",
@@ -25,6 +28,7 @@
     "@types/react-dom": "17.0.10",
     "@vitejs/plugin-react": "1.0.7",
     "autoprefixer": "10.4.7",
+    "gh-pages": "^4.0.0",
     "postcss": "8.4.13",
     "tailwindcss": "3.0.24",
     "typescript": "4.5.4",

@@ -1,8 +1,7 @@
-import { useContext, useState } from "react"
-import { Link, Navigate } from "react-router-dom";
+import { useContext } from "react"
+import { Navigate } from "react-router-dom";
 import URL from './../../../utils/URL';
 import { StateContext } from './../../../utils/context/MainContext';
-import { TypeOnChange } from "../../../utils/interface/CommonInterface";
 import logo from '../../../assets/img/logo.png'
 import Input from "../../layout/form/Input";
 import Button from "../../layout/form/Button";

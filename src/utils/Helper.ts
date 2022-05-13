@@ -54,8 +54,11 @@ const Helper = {
             return []
         }
     },
-    uniqueArray: (arr: any[],key:string) => {
-        return  [...new Map(arr.map(item => [item[key], item])).values()]
+    uniqueArray: (arr: any[], key: string) => {
+        return [...new Map(arr.map(item => [item[key], item])).values()]
+    },
+    upperCase: (str: string) => {
+        return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()
     }
 }
 

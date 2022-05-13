@@ -12,6 +12,7 @@ import Table from '../../layout/form/Table'
 import Title from '../../layout/form/Title'
 import { initLoadData, onUpdateStatus, paginateNext, paginatePrev, URHpopulateData } from './HomeUtils'
 import { parseISO, addDays, isPast } from 'date-fns'
+import Helper from '../../../utils/Helper'
 
 interface iUp {
     upComing?: boolean
@@ -64,9 +65,9 @@ export default function UpcomingOrHistorySection({ upComing = true, searching = 
                 ...requests.map((item, i) => {
                     let state = ""
                     if (upComing) {
-                        state = item?.loanStatus + ` & ${isPast(addDays(parseISO(item?.loanDate), parseInt(item.paymentTime))) ? "OverDue" : "Due"}`
+                        state = Helper.upperCase(item?.loanStatus) + ` & ${isPast(addDays(parseISO(item?.loanDate), parseInt(item.paymentTime))) ? "OverDue" : "Due"}`
                     } else {
-                        state = item?.loanStatus
+                        state = Helper.upperCase(item?.loanStatus)
                     }
                     return {
                         status: state,

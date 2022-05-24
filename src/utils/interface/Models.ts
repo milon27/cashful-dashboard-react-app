@@ -43,6 +43,7 @@ export interface User {
     address: string,
     mobileNumber: string,
     gender?: string,
+    levelId?: string,
 }
 
 export interface UserDoc {

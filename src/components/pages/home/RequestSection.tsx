@@ -10,7 +10,8 @@ import { Collections } from '../../../utils/firebase/Collections'
 import { getDoc, where, QuerySnapshot, updateDoc } from 'firebase/firestore'
 import { StateContext } from '../../../utils/context/MainContext'
 import FbPaginate from '../../layout/common/FbPaginate'
-import { initLoadData, onUpdateStatus, paginateNext, paginatePrev, URHpopulateData } from './HomeUtils'
+import { initLoadData, onUpdateLevel, onUpdateStatus, paginateNext, paginatePrev, URHpopulateData } from './HomeUtils'
+import MySelect from '../../layout/form/MySelect'
 
 export default function RequestSection() {
     const [requests, setRequests] = useState<LoanRequest[]>([])
@@ -48,7 +49,24 @@ export default function RequestSection() {
                             date: item?.loanDate.split(" ")[0],
                             fname: item?.firstName,
                             lname: item?.lastName,
-                            level: item?.level,
+                            // level: item?.level,
+                            level: <MySelect
+                                label='Select Level'
+                                labelAsFirst
+                                name=''
+                                defaultValue={item?.level}
+                                options={[
+                                    ...levels.map(item => {
+                                        return { title: item.name, value: item.id }
+                                    })
+                                ]}
+                                hideLabel
+                                full_width={true}
+                                onChange={(value) => {
+                                    // console.log(item.userId, "-----", value);
+                                    onUpdateLevel(item.userId, value);
+                                }}
+                            />,
                             term: item.paymentTime + "days",
                             amount: Define.CURRENCY + item.loanAmount,
                             interest: item.interest,

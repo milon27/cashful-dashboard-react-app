@@ -95,8 +95,9 @@ export const URHpopulateData = async (
         const user = await getDoc(userDocRef)
 
         const levelArray = levels.filter(item => {
-            const lAmount = parseInt(doc.data().loanAmount)
-            if (item.min <= lAmount && lAmount <= item.max) {
+            //const lAmount = parseInt(doc.data().loanAmount)
+            // if (item.min <= lAmount && lAmount <= item.max) {
+            if (item.id == user.data()?.levelId) {
                 return true;
             } else {
                 return false;
@@ -110,7 +111,7 @@ export const URHpopulateData = async (
             id: doc.id,
             firstName: user.data()?.firstName,
             lastName: user.data()?.lastName,
-            level: levelData?.name + "",
+            level: levelData?.id.trim() + "",
             interest: levelData?.interest * 100 + "%"
         } as LoanRequest
         setRequests(old => {
@@ -128,6 +129,16 @@ export const onUpdateStatus = async (item: LoanRequest, status: STATUS) => {
     if (yes === true) {
         const lrDocRef = createDoc<LoanRequest>(Collections.LOAN_REQUEST, item.id)
         await updateDoc(lrDocRef, { "loanStatus": status.toString() })
+        window.location.reload()
+    }
+}
+
+export const onUpdateLevel = async (uid: string, levelId: string) => {
+    //send to upcoming..
+    const yes = confirm("Are you sure you want to change the lavel?")
+    if (yes === true) {
+        const lrDocRef = createDoc<User>(Collections.USER, uid)
+        await updateDoc(lrDocRef, { "levelId": levelId })
         window.location.reload()
     }
 }

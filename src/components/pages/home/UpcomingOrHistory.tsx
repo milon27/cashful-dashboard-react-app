@@ -10,7 +10,7 @@ import MySelect from '../../layout/form/MySelect'
 import Spacing from '../../layout/form/Spacing'
 import Table from '../../layout/form/Table'
 import Title from '../../layout/form/Title'
-import { initLoadData, onUpdateStatus, paginateNext, paginatePrev, URHpopulateData } from './HomeUtils'
+import { initLoadData, onUpdateLevel, onUpdateStatus, paginateNext, paginatePrev, URHpopulateData } from './HomeUtils'
 import { parseISO, addDays, isPast } from 'date-fns'
 import Helper from '../../../utils/Helper'
 
@@ -71,11 +71,29 @@ export default function UpcomingOrHistorySection({ upComing = true, searching = 
                     }
                     return {
                         status: state,
+                        // duedate: addDays(parseISO(item?.loanDate), parseInt(item.paymentTime)).toISOString().split("T")[0],
                         duedate: addDays(parseISO(item?.loanDate), parseInt(item.paymentTime)).toISOString().split("T")[0],
                         date: item?.loanDate.split(" ")[0],
                         fname: item?.firstName,
                         lname: item?.lastName,
-                        level: item?.level,
+                        // level: item?.level,
+                        level: <MySelect
+                            label='Select Level'
+                            labelAsFirst
+                            name=''
+                            defaultValue={item?.level}
+                            options={[
+                                ...levels.map(item => {
+                                    return { title: item.name, value: item.id }
+                                })
+                            ]}
+                            hideLabel
+                            full_width={true}
+                            onChange={(value) => {
+                                // console.log(item.userId, "-----", value);
+                                onUpdateLevel(item.userId, value);
+                            }}
+                        />,
                         term: item.paymentTime + "days",
                         amount: Define.CURRENCY + item.loanAmount,
                         interest: item.interest,
